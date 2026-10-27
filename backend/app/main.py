@@ -2,8 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app import models
 
+from app.models.category import Category
+from app.models.product import Product
+
+from app.routers.categories import router as categories_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -24,6 +27,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(categories_router)
 
 
 @app.get("/")
