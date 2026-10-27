@@ -5,9 +5,12 @@ from app.database import Base, engine
 
 from app.models.category import Category
 from app.models.product import Product
+from app.models.stock_movement import StockMovement
 
 from app.routers.categories import router as categories_router
 from app.routers.products import router as products_router
+from app.routers.inventory import router as inventory_router
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -31,6 +34,7 @@ app.add_middleware(
 
 app.include_router(categories_router)
 app.include_router(products_router)
+app.include_router(inventory_router)
 
 
 @app.get("/")
