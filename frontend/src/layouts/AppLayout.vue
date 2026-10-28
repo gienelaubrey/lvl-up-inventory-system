@@ -43,24 +43,24 @@ import {
         </RouterLink>
 
         <RouterLink to="/products" class="nav-item">
-         <Package :size="20" />
-         <span>Products</span>
+          <Package :size="20" />
+          <span>Products</span>
         </RouterLink>
         
-        <a href="#" class="nav-item">
+        <RouterLink to="/inventory" class="nav-item">
           <Warehouse :size="20" />
           <span>Inventory</span>
-        </a>
+        </RouterLink>
 
-        <a href="#" class="nav-item">
+        <RouterLink to="/stock-in" class="nav-item">
           <ArrowDownToLine :size="20" />
           <span>Stock In</span>
-        </a>
+        </RouterLink>
 
-        <a href="#" class="nav-item">
+        <RouterLink to="/stock-out" class="nav-item">
           <ArrowUpFromLine :size="20" />
           <span>Stock Out</span>
-        </a>
+        </RouterLink>
 
         <a href="#" class="nav-item">
           <Truck :size="20" />
