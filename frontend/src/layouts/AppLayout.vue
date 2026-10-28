@@ -42,11 +42,11 @@ import {
           <span>Dashboard</span>
         </RouterLink>
 
-        <a href="#" class="nav-item">
-          <Package :size="20" />
-          <span>Products</span>
-        </a>
-
+        <RouterLink to="/products" class="nav-item">
+         <Package :size="20" />
+         <span>Products</span>
+        </RouterLink>
+        
         <a href="#" class="nav-item">
           <Warehouse :size="20" />
           <span>Inventory</span>
@@ -84,7 +84,7 @@ import {
       <div class="sidebar-footer">
         <button class="logout-button">
           <LogOut :size="19" />
-          Logout
+          <span>Logout</span>
         </button>
       </div>
 
