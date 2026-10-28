@@ -1398,3 +1398,34 @@ textarea:focus-visible {
   color:
     var(--danger);
 }
+
+/* =========================
+   MOVEMENT BADGES
+   ========================= */
+
+.movement-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.movement-in {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.movement-out {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.text-button {
+  text-decoration: none;
+}
