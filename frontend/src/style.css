@@ -1307,3 +1307,94 @@ textarea:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================
+   SUPPLIERS
+   ========================= */
+
+.suppliers-page {
+  width: min(1500px, 100%);
+  margin: 0 auto;
+}
+
+.suppliers-page .primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.suppliers-table {
+  min-width: 1000px;
+}
+
+.supplier-name {
+  color: var(--text-900);
+  font-weight: 700;
+}
+
+.supplier-address {
+  display: block;
+
+  max-width: 220px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+.full-width-field {
+  grid-column: 1 / -1;
+}
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.table-action-button {
+  width: 32px;
+  height: 32px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--border);
+
+  border-radius: 8px;
+
+  background: var(--white);
+
+  color: var(--text-500);
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.table-action-button:hover {
+  border-color:
+    rgba(143, 29, 29, 0.2);
+
+  background:
+    var(--brand-50);
+
+  color:
+    var(--brand-700);
+}
+
+.danger-action:hover {
+  border-color: #edd4d4;
+
+  background:
+    var(--danger-bg);
+
+  color:
+    var(--danger);
+}

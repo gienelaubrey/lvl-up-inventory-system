@@ -62,10 +62,10 @@ import {
           <span>Stock Out</span>
         </RouterLink>
 
-        <a href="#" class="nav-item">
+        <RouterLink to="/suppliers" class="nav-item">
           <Truck :size="20" />
           <span>Suppliers</span>
-        </a>
+        </RouterLink>
 
         <a href="#" class="nav-item">
           <FileChartColumn :size="20" />

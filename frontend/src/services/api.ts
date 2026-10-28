@@ -140,3 +140,97 @@ export async function getStockMovements():
 
   return handleResponse<StockMovement[]>(response)
 }
+
+export interface Supplier {
+  id: number
+  name: string
+  contact_person: string | null
+  phone: string | null
+  email: string | null
+  address: string | null
+  notes: string | null
+  created_at: string
+}
+
+export interface SupplierCreate {
+  name: string
+  contact_person: string | null
+  phone: string | null
+  email: string | null
+  address: string | null
+  notes: string | null
+}
+
+export interface SupplierUpdate {
+  name?: string
+  contact_person?: string | null
+  phone?: string | null
+  email?: string | null
+  address?: string | null
+  notes?: string | null
+}
+
+
+export async function getSuppliers():
+  Promise<Supplier[]> {
+  const response = await fetch(
+    `${API_BASE_URL}/suppliers`
+  )
+
+  return handleResponse<Supplier[]>(response)
+}
+
+
+export async function createSupplier(
+  data: SupplierCreate
+): Promise<Supplier> {
+  const response = await fetch(
+    `${API_BASE_URL}/suppliers`,
+    {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      body: JSON.stringify(data),
+    }
+  )
+
+  return handleResponse<Supplier>(response)
+}
+
+
+export async function updateSupplier(
+  id: number,
+  data: SupplierUpdate
+): Promise<Supplier> {
+  const response = await fetch(
+    `${API_BASE_URL}/suppliers/${id}`,
+    {
+      method: 'PUT',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      body: JSON.stringify(data),
+    }
+  )
+
+  return handleResponse<Supplier>(response)
+}
+
+
+export async function deleteSupplier(
+  id: number
+): Promise<void> {
+  const response = await fetch(
+    `${API_BASE_URL}/suppliers/${id}`,
+    {
+      method: 'DELETE',
+    }
+  )
+
+  return handleResponse<void>(response)
+}

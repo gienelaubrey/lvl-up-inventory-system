@@ -4,6 +4,8 @@ import ProductsView from '../views/ProductsView.vue'
 import InventoryView from '../views/InventoryView.vue'
 import StockInView from '../views/StockInView.vue'
 import StockOutView from '../views/StockOutView.vue'
+import MovementsView from '../views/MovementsView.vue'
+import SupplierView from '../views/SupplierView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -36,6 +38,18 @@ const router = createRouter({
       path: '/stock-out',
       name: 'stock-out',
       component: StockOutView,
+    },
+
+    {
+      path: '/movements',
+      name: 'movements',
+      component: MovementsView,
+    },
+
+    {
+      path: '/suppliers',
+      name: 'suppliers',
+      component: SupplierView,
     },
   ],
 })
