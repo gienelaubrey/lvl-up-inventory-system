@@ -30,6 +30,19 @@ export interface ProductCreate {
   reorder_level: number
 }
 
+export interface ProductSalesRank {
+  sku: string
+  product_name: string
+  units_sold: number
+  sales_value: number | string
+}
+
+export interface SupplierSalesAnalytics {
+  supplier_id: number
+  supplier_name: string
+  products: ProductSalesRank[]
+}
+
 async function handleResponse<T>(
   response: Response
 ): Promise<T> {
@@ -97,6 +110,7 @@ export interface StockMovement {
 export interface StockMovementCreate {
   product_id: number
   quantity: number
+  reason: string | null
   reference: string | null
   notes: string | null
 }
@@ -141,6 +155,18 @@ export async function getStockMovements():
   )
 
   return handleResponse<StockMovement[]>(response)
+}
+
+export async function getSalesBySupplier():
+  Promise<SupplierSalesAnalytics[]> {
+
+  const response = await fetch(
+    `${API_BASE_URL}/analytics/sales-by-supplier`
+  )
+
+  return handleResponse<
+    SupplierSalesAnalytics[]
+  >(response)
 }
 
 export interface Supplier {
