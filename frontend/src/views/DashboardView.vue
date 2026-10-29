@@ -27,6 +27,9 @@ import {
 import SupplierSalesChart
   from '../components/SupplierSalesChart.vue'
 
+import StockMovementTrendChart
+  from '../components/StockMovementTrendChart.vue'
+
 
 const products = ref<Product[]>([])
 const suppliers = ref<Supplier[]>([])
@@ -316,7 +319,8 @@ onMounted(loadDashboard)
       </div>
 
     </div>
-
+    
+    <StockMovementTrendChart />
     <SupplierSalesChart />
 
     <div class="dashboard-grid">

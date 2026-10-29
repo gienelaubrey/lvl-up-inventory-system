@@ -7,7 +7,6 @@ import {
   ArrowUpFromLine,
   Truck,
   FileChartColumn,
-  Users,
   LogOut,
   Bell,
   Search,
@@ -73,11 +72,6 @@ import {
         </a>
 
         <div class="nav-divider"></div>
-
-        <a href="#" class="nav-item">
-          <Users :size="20" />
-          <span>Users</span>
-        </a>
 
       </nav>
 
