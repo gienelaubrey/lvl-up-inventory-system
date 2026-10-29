@@ -42,7 +42,6 @@ const selectedSupplier = computed(() => {
   )
 })
 
-
 async function loadAnalytics() {
   loading.value = true
   errorMessage.value = ''
@@ -55,10 +54,6 @@ async function loadAnalytics() {
       selectedSupplierId.value =
         analytics.value[0].supplier_id
     }
-
-    await nextTick()
-
-    renderChart()
   } catch (error) {
     errorMessage.value =
       error instanceof Error
@@ -66,6 +61,15 @@ async function loadAnalytics() {
         : 'Unable to load analytics'
   } finally {
     loading.value = false
+  }
+
+  await nextTick()
+
+  if (
+    !errorMessage.value &&
+    analytics.value.length > 0
+  ) {
+    renderChart()
   }
 }
 
