@@ -11,6 +11,7 @@ from app.database import get_db
 
 from app.models.category import Category
 from app.models.product import Product
+from app.models.supplier import Supplier
 
 from app.schemas.product import (
     ProductCreate,
@@ -61,10 +62,26 @@ def create_product(
                 detail="Category not found"
             )
 
+    if product.supplier_id is not None:
+        supplier = (
+            db.query(Supplier)
+            .filter(
+                Supplier.id == product.supplier_id
+            )
+            .first()
+        )
+
+        if not supplier:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Supplier not found"
+            )
+
     new_product = Product(
         sku=product.sku,
         name=product.name,
         category_id=product.category_id,
+        supplier_id=product.supplier_id,
         unit=product.unit,
         cost_price=product.cost_price,
         selling_price=product.selling_price,

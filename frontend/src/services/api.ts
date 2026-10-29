@@ -11,6 +11,7 @@ export interface Product {
   sku: string
   name: string
   category_id: number | null
+  supplier_id: number | null
   unit: string
   cost_price: number | string
   selling_price: number | string
@@ -22,6 +23,7 @@ export interface ProductCreate {
   sku: string
   name: string
   category_id: number | null
+  supplier_id: number | null
   unit: string
   cost_price: number
   selling_price: number

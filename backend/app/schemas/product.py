@@ -8,6 +8,7 @@ class ProductBase(BaseModel):
     name: str = Field(min_length=1, max_length=150)
 
     category_id: int | None = None
+    supplier_id: int | None = None
 
     unit: str = Field(
         default="piece",
@@ -29,6 +30,7 @@ class ProductBase(BaseModel):
         default=0,
         ge=0
     )
+    
 
 
 class ProductCreate(ProductBase):
@@ -40,6 +42,7 @@ class ProductUpdate(BaseModel):
     name: str | None = None
     category_id: int | None = None
     unit: str | None = None
+    supplier_id: int | None = None
     cost_price: Decimal | None = Field(
         default=None,
         ge=0

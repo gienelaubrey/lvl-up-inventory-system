@@ -3,11 +3,12 @@ from datetime import datetime, timezone
 from sqlalchemy import Column, DateTime, Integer, String, Text
 
 from app.database import Base
+from sqlalchemy.orm import relationship
 
 
 class Supplier(Base):
     __tablename__ = "suppliers"
-
+       
     id = Column(
         Integer,
         primary_key=True,
@@ -50,4 +51,9 @@ class Supplier(Base):
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
         nullable=False
+    )
+
+    products = relationship(
+    "Product",
+        back_populates="supplier"
     )

@@ -63,3 +63,8 @@ class StockMovement(Base):
     product = relationship(
         "Product"
     )
+    
+    reason = Column(
+        String(30),
+        nullable=True
+    )

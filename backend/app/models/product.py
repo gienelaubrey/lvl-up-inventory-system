@@ -37,6 +37,12 @@ class Product(Base):
         ForeignKey("categories.id"),
         nullable=True
     )
+    
+    supplier_id = Column(
+        Integer,
+        ForeignKey("suppliers.id"),
+        nullable=True
+    )
 
     unit = Column(
         String(50),
@@ -70,5 +76,10 @@ class Product(Base):
 
     category = relationship(
         "Category",
+        back_populates="products"
+    )
+
+    supplier = relationship(
+        "Supplier",
         back_populates="products"
     )

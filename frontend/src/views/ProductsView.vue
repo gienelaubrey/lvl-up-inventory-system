@@ -18,13 +18,16 @@ import {
   createProduct,
   getCategories,
   getProducts,
+  getSuppliers,
   type Category,
   type Product,
+  type Supplier
 } from '../services/api'
 
 
 const products = ref<Product[]>([])
 const categories = ref<Category[]>([])
+const suppliers = ref<Supplier[]>([])
 
 const loading = ref(true)
 const submitting = ref(false)
@@ -41,6 +44,7 @@ const form = reactive({
   sku: '',
   name: '',
   category_id: '',
+  supplier_id: '',
   unit: 'piece',
   cost_price: 0,
   selling_price: 0,
@@ -121,6 +125,7 @@ function resetForm() {
   form.sku = ''
   form.name = ''
   form.category_id = ''
+  form.supplier_id = ''
   form.unit = 'piece'
   form.cost_price = 0
   form.selling_price = 0
@@ -146,6 +151,21 @@ function closeModal() {
   showModal.value = false
 }
 
+function getSupplierName(
+  supplierId: number | null
+) {
+  if (supplierId === null) {
+    return 'No supplier'
+  }
+
+  const supplier =
+    suppliers.value.find(
+      (item) =>
+        item.id === supplierId
+    )
+
+  return supplier?.name ?? 'Unknown'
+}
 
 async function loadData() {
   loading.value = true
@@ -155,13 +175,16 @@ async function loadData() {
     const [
       productData,
       categoryData,
+      supplierData,
     ] = await Promise.all([
       getProducts(),
       getCategories(),
+      getSuppliers(),
     ])
 
     products.value = productData
     categories.value = categoryData
+    suppliers.value = supplierData
   } catch (error) {
     errorMessage.value =
       error instanceof Error
@@ -194,21 +217,22 @@ async function submitProduct() {
       sku: form.sku.trim(),
       name: form.name.trim(),
 
-      category_id:
-        form.category_id === ''
+      category_id: form.category_id === ''
+        ? null
+        : Number(form.category_id),
+      
+      supplier_id:
+        form.supplier_id === ''
           ? null
-          : Number(form.category_id),
+          : Number(form.supplier_id),
 
       unit: form.unit.trim(),
 
-      cost_price:
-        Number(form.cost_price),
+      cost_price: Number(form.cost_price),
 
-      selling_price:
-        Number(form.selling_price),
+      selling_price: Number(form.selling_price),
 
-      reorder_level:
-        Number(form.reorder_level),
+      reorder_level: Number(form.reorder_level),
     })
 
     await loadData()
@@ -307,6 +331,7 @@ onMounted(loadData)
               <th>SKU</th>
               <th>Product</th>
               <th>Category</th>
+              <th>Supplier</th>
               <th>Unit</th>
               <th>Cost</th>
               <th>Selling Price</th>
@@ -320,7 +345,7 @@ onMounted(loadData)
 
             <tr v-if="loading">
               <td
-                colspan="8"
+                colspan="9"
                 class="table-message"
               >
                 Loading products...
@@ -334,7 +359,7 @@ onMounted(loadData)
               "
             >
               <td
-                colspan="8"
+                colspan="9"
                 class="table-message"
               >
                 <div class="empty-products">
@@ -376,6 +401,14 @@ onMounted(loadData)
                 {{
                   getCategoryName(
                     product.category_id
+                  )
+                }}
+              </td>
+
+              <td>
+                {{
+                  getSupplierName(
+                    product.supplier_id
                   )
                 }}
               </td>
@@ -552,6 +585,29 @@ onMounted(loadData)
                   {{ category.name }}
                 </option>
 
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="supplier">
+                Supplier
+              </label>
+
+              <select
+                id="supplier"
+                v-model="form.supplier_id"
+              >
+                <option value="">
+                  No supplier
+                </option>
+
+                <option
+                  v-for="supplier in suppliers"
+                  :key="supplier.id"
+                  :value="supplier.id"
+                >
+                  {{ supplier.name }}
+                </option>
               </select>
             </div>
 

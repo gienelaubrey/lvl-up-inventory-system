@@ -44,10 +44,12 @@ def stock_in(
         )
 
     product.current_stock += data.quantity
+    reason = (data.reason or "RECEIPT").upper()
 
     movement = StockMovement(
         product_id=product.id,
         movement_type="IN",
+        reason=reason,
         quantity=data.quantity,
         stock_after=product.current_stock,
         reference=data.reference,
@@ -91,10 +93,12 @@ def stock_out(
         )
 
     product.current_stock -= data.quantity
+    reason = (data.reason or "SALE").upper()
 
     movement = StockMovement(
         product_id=product.id,
         movement_type="OUT",
+        reason=reason,
         quantity=data.quantity,
         stock_after=product.current_stock,
         reference=data.reference,
