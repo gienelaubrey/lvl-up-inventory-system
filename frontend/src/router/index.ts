@@ -6,6 +6,7 @@ import StockInView from '../views/StockInView.vue'
 import StockOutView from '../views/StockOutView.vue'
 import MovementsView from '../views/MovementsView.vue'
 import SupplierView from '../views/SupplierView.vue'
+import ReportsView from '../views/ReportsView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -50,6 +51,12 @@ const router = createRouter({
       path: '/suppliers',
       name: 'suppliers',
       component: SupplierView,
+    },
+
+    {
+      path: '/reports',
+      name: 'reports',
+      component: ReportsView,
     },
   ],
 })

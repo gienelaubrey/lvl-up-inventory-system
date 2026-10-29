@@ -11,6 +11,7 @@ from app.routers.products import router as products_router
 from app.routers.inventory import router as inventory_router
 from app.routers.suppliers import router as suppliers_router
 from app.routers.analytics import router as analytics_router
+from app.routers.reports import router as reports_router
 
 
 
@@ -37,6 +38,7 @@ app.include_router(products_router)
 app.include_router(inventory_router)
 app.include_router(suppliers_router)
 app.include_router(analytics_router)
+app.include_router(reports_router)
 
 
 @app.get("/")

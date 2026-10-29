@@ -66,11 +66,13 @@ import {
           <span>Suppliers</span>
         </RouterLink>
 
-        <a href="#" class="nav-item">
+        <RouterLink
+          to="/reports"
+          class="nav-item"
+        >
           <FileChartColumn :size="20" />
           <span>Reports</span>
-        </a>
-
+        </RouterLink>
         <div class="nav-divider"></div>
 
       </nav>

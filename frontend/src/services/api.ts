@@ -262,3 +262,40 @@ export async function deleteSupplier(
 
   return handleResponse<void>(response)
 }
+
+export async function downloadSupplierReport(
+  supplierId: number,
+  startDate: string,
+  endDate: string
+): Promise<Blob> {
+
+  const params =
+    new URLSearchParams({
+      start_date: startDate,
+      end_date: endDate,
+    })
+
+
+  const response = await fetch(
+    `${API_BASE_URL}` +
+    `/reports/suppliers/` +
+    `${supplierId}/pdf?` +
+    params.toString()
+  )
+
+
+  if (!response.ok) {
+    const error =
+      await response
+        .json()
+        .catch(() => null)
+
+    throw new Error(
+      error?.detail ||
+      'Unable to generate report'
+    )
+  }
+
+
+  return response.blob()
+}
