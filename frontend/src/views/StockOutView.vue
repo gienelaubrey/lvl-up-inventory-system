@@ -25,6 +25,7 @@ const error = ref('')
 const form = reactive({
   product_id: '',
   quantity: 1,
+  reason: 'SALE',
   reference: '',
   notes: '',
 })
@@ -50,10 +51,9 @@ async function submit() {
     const result = await stockOut({
       product_id: Number(form.product_id),
       quantity: Number(form.quantity),
-      reference:
-        form.reference.trim() || null,
-      notes:
-        form.notes.trim() || null,
+      reason: form.reason,
+      reference: form.reference.trim() || null,
+      notes: form.notes.trim() || null,
     })
 
     message.value =
@@ -161,6 +161,33 @@ onMounted(loadProducts)
             min="1"
             required
           />
+        </div>
+
+        <div class="form-field">
+          <label for="reason">
+            Reason
+          </label>
+
+          <select
+            id="reason"
+            v-model="form.reason"
+          >
+            <option value="SALE">
+              Sale
+            </option>
+
+            <option value="DAMAGE">
+              Damaged
+            </option>
+
+            <option value="RETURN">
+              Return
+            </option>
+
+            <option value="ADJUSTMENT">
+              Inventory Adjustment
+            </option>
+          </select>
         </div>
 
 

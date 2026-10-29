@@ -25,6 +25,7 @@ const error = ref('')
 const form = reactive({
   product_id: '',
   quantity: 1,
+  reason: 'RECEIPT',
   reference: '',
   notes: '',
 })
@@ -50,10 +51,9 @@ async function submit() {
     const result = await stockIn({
       product_id: Number(form.product_id),
       quantity: Number(form.quantity),
-      reference:
-        form.reference.trim() || null,
-      notes:
-        form.notes.trim() || null,
+      reason: form.reason,
+      reference: form.reference.trim() || null,
+      notes: form.notes.trim() || null,
     })
 
     message.value =
