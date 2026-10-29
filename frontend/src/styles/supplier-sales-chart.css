@@ -1,0 +1,113 @@
+.analytics-card {
+  margin-bottom: 20px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  background: var(--surface);
+
+  box-shadow: var(--shadow-sm);
+}
+
+.analytics-header {
+  padding: 19px 21px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  border-bottom:
+    1px solid var(--border);
+}
+
+.analytics-header h2 {
+  margin: 0;
+
+  color: var(--text-900);
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.analytics-header p {
+  margin: 5px 0 0;
+
+  color: var(--text-500);
+
+  font-size: 11px;
+}
+
+.analytics-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.analytics-controls select {
+  min-width: 140px;
+  height: 37px;
+
+  padding: 0 11px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 9px;
+
+  outline: none;
+
+  background: var(--surface-soft);
+
+  color: var(--text-700);
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.analytics-controls select:focus {
+  border-color:
+    rgba(123, 30, 35, 0.35);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(123, 30, 35, 0.07);
+}
+
+.analytics-canvas {
+  height: 340px;
+
+  padding: 22px;
+}
+
+.analytics-empty {
+  padding: 65px 20px;
+
+  color: var(--text-400);
+
+  text-align: center;
+
+  font-size: 12px;
+}
+
+@media (max-width: 700px) {
+  .analytics-header {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .analytics-controls {
+    flex-direction: column;
+  }
+
+  .analytics-controls select {
+    width: 100%;
+  }
+
+  .analytics-canvas {
+    height: 390px;
+  }
+}

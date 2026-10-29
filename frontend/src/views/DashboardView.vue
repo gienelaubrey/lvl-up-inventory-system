@@ -24,6 +24,9 @@ import {
   type Supplier,
 } from '../services/api'
 
+import SupplierSalesChart
+  from '../components/SupplierSalesChart.vue'
+
 
 const products = ref<Product[]>([])
 const suppliers = ref<Supplier[]>([])
@@ -314,6 +317,7 @@ onMounted(loadDashboard)
 
     </div>
 
+    <SupplierSalesChart />
 
     <div class="dashboard-grid">
 
