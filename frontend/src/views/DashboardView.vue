@@ -6,14 +6,20 @@ import {
 } from 'vue'
 
 import {
+  AlertTriangle,
+  ArrowDownToLine,
+  ArrowUpFromLine,
   Boxes,
+  FileDown,
   Package,
-  TriangleAlert,
   Truck,
-  ArrowDownRight,
-  ArrowUpRight,
-  AlertCircle,
 } from 'lucide-vue-next'
+
+import SupplierSalesChart
+  from '../components/SupplierSalesChart.vue'
+
+import StockMovementTrendChart
+  from '../components/StockMovementTrendChart.vue'
 
 import {
   getProducts,
@@ -24,56 +30,38 @@ import {
   type Supplier,
 } from '../services/api'
 
-import SupplierSalesChart
-  from '../components/SupplierSalesChart.vue'
-
-import StockMovementTrendChart
-  from '../components/StockMovementTrendChart.vue'
-
-
 const products = ref<Product[]>([])
 const suppliers = ref<Supplier[]>([])
 const movements = ref<StockMovement[]>([])
-
 const loading = ref(true)
 const errorMessage = ref('')
-
 
 const totalProducts = computed(
   () => products.value.length
 )
 
-
-const totalStock = computed(() => {
-  return products.value.reduce(
+const totalStock = computed(() =>
+  products.value.reduce(
     (total, product) =>
       total + product.current_stock,
     0
   )
-})
+)
 
-
-const lowStockCount = computed(() => {
-  return products.value.filter(
+const lowStockProducts = computed(() =>
+  products.value.filter(
     (product) =>
       product.current_stock <=
       product.reorder_level
-  ).length
-})
-
+  )
+)
 
 const supplierCount = computed(
   () => suppliers.value.length
 )
 
-
-const recentMovements = computed(
-  () => movements.value.slice(0, 5)
-)
-
-
-const todayStockIn = computed(() => {
-  return movements.value
+const todayStockIn = computed(() =>
+  movements.value
     .filter(
       (movement) =>
         movement.movement_type === 'IN' &&
@@ -84,11 +72,10 @@ const todayStockIn = computed(() => {
         total + movement.quantity,
       0
     )
-})
+)
 
-
-const todayStockOut = computed(() => {
-  return movements.value
+const todayStockOut = computed(() =>
+  movements.value
     .filter(
       (movement) =>
         movement.movement_type === 'OUT' &&
@@ -99,55 +86,49 @@ const todayStockOut = computed(() => {
         total + movement.quantity,
       0
     )
-})
+)
 
+const recentMovements = computed(
+  () => movements.value.slice(0, 5)
+)
 
-function isToday(
-  value: string
-) {
+const topStockProducts = computed(() =>
+  [...products.value]
+    .sort(
+      (a, b) =>
+        b.current_stock - a.current_stock
+    )
+    .slice(0, 5)
+)
+
+function isToday(value: string) {
   const date = new Date(value)
   const today = new Date()
 
   return (
-    date.getFullYear() ===
-      today.getFullYear() &&
-
-    date.getMonth() ===
-      today.getMonth() &&
-
-    date.getDate() ===
-      today.getDate()
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
   )
 }
 
-
-function productName(
-  productId: number
-) {
-  const product =
-    products.value.find(
-      (item) =>
-        item.id === productId
-    )
-
-  return product
-    ? `${product.sku} — ${product.name}`
-    : `Product #${productId}`
+function productFor(id: number) {
+  return products.value.find(
+    (product) => product.id === id
+  )
 }
 
-
-function formatDate(
-  value: string
-) {
+function formatDate(value: string) {
   return new Intl.DateTimeFormat(
     'en-PH',
     {
-      dateStyle: 'medium',
-      timeStyle: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
     }
   ).format(new Date(value))
 }
-
 
 async function loadDashboard() {
   loading.value = true
@@ -171,378 +152,280 @@ async function loadDashboard() {
     errorMessage.value =
       error instanceof Error
         ? error.message
-        : 'Unable to load dashboard'
+        : 'Unable to load dashboard.'
   } finally {
     loading.value = false
   }
 }
 
-
 onMounted(loadDashboard)
 </script>
 
-
 <template>
-  <div class="dashboard">
-
-    <div class="page-header">
-
+  <div class="executive-dashboard">
+    <section class="dashboard-intro">
       <div>
-        <h1>Dashboard</h1>
-
+        <span class="eyebrow">Inventory overview</span>
+        <h1>Welcome back, Admin</h1>
         <p>
-          Overview of LVL UP inventory
-          operations.
+          Track inventory health, supplier performance,
+          stock movement, and warehouse activity.
         </p>
       </div>
 
-    </div>
-
+      <RouterLink
+        to="/suppliers-reports?tab=reports"
+        class="export-report-button"
+      >
+        <FileDown :size="17" />
+        Export Supplier Report
+      </RouterLink>
+    </section>
 
     <div
       v-if="errorMessage"
-      class="alert error-alert"
+      class="dashboard-alert"
     >
-      <AlertCircle :size="17" />
-
       {{ errorMessage }}
     </div>
 
-
-    <div class="stats-grid">
-
-      <div class="stat-card">
-
-        <div class="stat-icon red">
-          <Package :size="23" />
+    <section class="metric-grid">
+      <article class="metric-card">
+        <div class="metric-top">
+          <span>Total Products</span>
+          <div class="metric-icon">
+            <Package :size="19" />
+          </div>
         </div>
 
-        <div>
-          <span class="stat-label">
-            Total Products
-          </span>
+        <strong>{{ loading ? '—' : totalProducts }}</strong>
+        <p>Registered inventory items</p>
+      </article>
 
-          <h2>
-            {{
-              loading
-                ? '—'
-                : totalProducts
-            }}
-          </h2>
-
-          <span class="stat-description">
-            Registered products
-          </span>
+      <article class="metric-card">
+        <div class="metric-top">
+          <span>Total Stock</span>
+          <div class="metric-icon">
+            <Boxes :size="19" />
+          </div>
         </div>
 
+        <strong>{{ loading ? '—' : totalStock.toLocaleString() }}</strong>
+        <p>Units currently available</p>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <span>Low Stock Items</span>
+          <div class="metric-icon metric-icon-warning">
+            <AlertTriangle :size="19" />
+          </div>
+        </div>
+
+        <strong>{{ loading ? '—' : lowStockProducts.length }}</strong>
+        <p>Items requiring attention</p>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-top">
+          <span>Suppliers</span>
+          <div class="metric-icon">
+            <Truck :size="19" />
+          </div>
+        </div>
+
+        <strong>{{ loading ? '—' : supplierCount }}</strong>
+        <p>Registered supplier partners</p>
+      </article>
+    </section>
+
+    <section class="dashboard-content-grid">
+      <div class="dashboard-primary-column">
+        <StockMovementTrendChart />
+
+        <SupplierSalesChart />
+
+        <div class="dashboard-two-column">
+          <article class="executive-card">
+            <div class="executive-card-head">
+              <div>
+                <span class="card-kicker">Warehouse flow</span>
+                <h2>Today’s Movement</h2>
+              </div>
+            </div>
+
+            <div class="movement-summary-grid">
+              <div class="movement-summary-item movement-in-summary">
+                <div class="summary-icon">
+                  <ArrowDownToLine :size="18" />
+                </div>
+
+                <div>
+                  <span>Stock In</span>
+                  <strong>{{ todayStockIn.toLocaleString() }}</strong>
+                  <small>units received today</small>
+                </div>
+              </div>
+
+              <div class="movement-summary-item movement-out-summary">
+                <div class="summary-icon">
+                  <ArrowUpFromLine :size="18" />
+                </div>
+
+                <div>
+                  <span>Stock Out</span>
+                  <strong>{{ todayStockOut.toLocaleString() }}</strong>
+                  <small>units released today</small>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="executive-card">
+            <div class="executive-card-head">
+              <div>
+                <span class="card-kicker">Stock balance</span>
+                <h2>Highest Stock</h2>
+              </div>
+            </div>
+
+            <div class="ranking-list">
+              <div
+                v-for="(product, index) in topStockProducts"
+                :key="product.id"
+                class="ranking-row"
+              >
+                <div class="rank-number">
+                  {{ String(index + 1).padStart(2, '0') }}
+                </div>
+
+                <div class="rank-copy">
+                  <strong>{{ product.sku }}</strong>
+                  <span>{{ product.name }}</span>
+                </div>
+
+                <b>{{ product.current_stock }}</b>
+              </div>
+            </div>
+          </article>
+        </div>
       </div>
 
+      <aside class="dashboard-secondary-column">
+        <article class="executive-card recent-card">
+          <div class="executive-card-head">
+            <div>
+              <span class="card-kicker">Latest activity</span>
+              <h2>Recent Movements</h2>
+            </div>
 
-      <div class="stat-card">
-
-        <div class="stat-icon red">
-          <Boxes :size="23" />
-        </div>
-
-        <div>
-          <span class="stat-label">
-            Total Stock
-          </span>
-
-          <h2>
-            {{
-              loading
-                ? '—'
-                : totalStock
-            }}
-          </h2>
-
-          <span class="stat-description">
-            Units currently available
-          </span>
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-icon warning">
-          <TriangleAlert :size="23" />
-        </div>
-
-        <div>
-          <span class="stat-label">
-            Low Stock
-          </span>
-
-          <h2>
-            {{
-              loading
-                ? '—'
-                : lowStockCount
-            }}
-          </h2>
-
-          <span class="stat-description">
-            Products requiring attention
-          </span>
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-icon red">
-          <Truck :size="23" />
-        </div>
-
-        <div>
-          <span class="stat-label">
-            Suppliers
-          </span>
-
-          <h2>
-            {{
-              loading
-                ? '—'
-                : supplierCount
-            }}
-          </h2>
-
-          <span class="stat-description">
-            Registered suppliers
-          </span>
-        </div>
-
-      </div>
-
-    </div>
-    
-    <StockMovementTrendChart />
-    <SupplierSalesChart />
-
-    <div class="dashboard-grid">
-
-      <section class="panel">
-
-        <div class="panel-header">
-
-          <div>
-            <h2>
-              Recent Stock Movements
-            </h2>
-
-            <p>
-              Latest inventory activity
-            </p>
+            <RouterLink
+              to="/inventory"
+              class="card-link"
+            >
+              View inventory
+            </RouterLink>
           </div>
 
-          <RouterLink
-            to="/movements"
-            class="text-button"
+          <div
+            v-if="!recentMovements.length && !loading"
+            class="empty-state"
           >
-            View All
-          </RouterLink>
+            No stock movements yet.
+          </div>
 
-        </div>
-
-
-        <div class="table-wrapper">
-
-          <table>
-
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Type</th>
-                <th>Qty</th>
-                <th>Stock After</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              <tr v-if="loading">
-                <td
-                  colspan="5"
-                  class="table-message"
-                >
-                  Loading activity...
-                </td>
-              </tr>
-
-
-              <tr
-                v-else-if="
-                  recentMovements.length === 0
+          <div class="recent-list">
+            <div
+              v-for="movement in recentMovements"
+              :key="movement.id"
+              class="recent-item"
+            >
+              <div
+                class="recent-icon"
+                :class="
+                  movement.movement_type === 'IN'
+                    ? 'recent-in'
+                    : 'recent-out'
                 "
               >
-                <td
-                  colspan="5"
-                  class="table-message"
-                >
-                  No stock movements yet.
-                </td>
-              </tr>
+                <ArrowDownToLine
+                  v-if="movement.movement_type === 'IN'"
+                  :size="16"
+                />
 
+                <ArrowUpFromLine
+                  v-else
+                  :size="16"
+                />
+              </div>
 
-              <tr
-                v-for="
-                  movement in
-                  recentMovements
-                "
-                v-else
-                :key="movement.id"
-              >
-
-                <td>
+              <div class="recent-copy">
+                <strong>
                   {{
-                    productName(
-                      movement.product_id
-                    )
+                    productFor(movement.product_id)?.sku
+                      || `Product #${movement.product_id}`
                   }}
-                </td>
+                </strong>
 
-
-                <td>
-
-                  <span
-                    class="movement-type"
-                    :class="
-                      movement.movement_type ===
-                      'IN'
-                        ? 'movement-in'
-                        : 'movement-out'
-                    "
-                  >
-
-                    {{
-                      movement.movement_type ===
-                      'IN'
-                        ? 'Stock In'
-                        : 'Stock Out'
-                    }}
-
-                  </span>
-
-                </td>
-
-
-                <td>
-                  {{ movement.quantity }}
-                </td>
-
-
-                <td>
-                  <strong>
-                    {{ movement.stock_after }}
-                  </strong>
-                </td>
-
-
-                <td>
+                <span>
                   {{
-                    formatDate(
-                      movement.created_at
-                    )
+                    movement.movement_type === 'IN'
+                      ? 'Stock In'
+                      : 'Stock Out'
                   }}
-                </td>
+                  · {{ movement.quantity }} units
+                </span>
 
-              </tr>
+                <small>
+                  {{ formatDate(movement.created_at) }}
+                </small>
+              </div>
 
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </section>
-
-
-      <section class="panel">
-
-        <div class="panel-header">
-
-          <div>
-            <h2>Today's Activity</h2>
-
-            <p>
-              Inventory movement today
-            </p>
-          </div>
-
-        </div>
-
-
-        <div class="summary-list">
-
-          <div class="summary-item">
-
-            <div
-              class="
-                summary-icon
-                stock-in
-              "
-            >
-              <ArrowDownRight
-                :size="20"
-              />
+              <b>{{ movement.stock_after }}</b>
             </div>
+          </div>
+        </article>
 
+        <article class="executive-card low-stock-card">
+          <div class="executive-card-head">
             <div>
-              <span>
-                Stock In
-              </span>
-
-              <strong>
-                {{
-                  loading
-                    ? '—'
-                    : `${todayStockIn} units`
-                }}
-              </strong>
+              <span class="card-kicker">Attention needed</span>
+              <h2>Low Stock</h2>
             </div>
 
+            <span class="count-chip">
+              {{ lowStockProducts.length }}
+            </span>
           </div>
 
+          <div
+            v-if="!lowStockProducts.length && !loading"
+            class="empty-state"
+          >
+            All products are above reorder level.
+          </div>
 
-          <div class="summary-item">
-
+          <div class="low-stock-list">
             <div
-              class="
-                summary-icon
-                stock-out
-              "
+              v-for="product in lowStockProducts.slice(0, 5)"
+              :key="product.id"
+              class="low-stock-row"
             >
-              <ArrowUpRight
-                :size="20"
-              />
+              <div>
+                <strong>{{ product.sku }}</strong>
+                <span>{{ product.name }}</span>
+              </div>
+
+              <b>
+                {{ product.current_stock }}
+                / {{ product.reorder_level }}
+              </b>
             </div>
-
-            <div>
-              <span>
-                Stock Out
-              </span>
-
-              <strong>
-                {{
-                  loading
-                    ? '—'
-                    : `${todayStockOut} units`
-                }}
-              </strong>
-            </div>
-
           </div>
-
-        </div>
-
-      </section>
-
-    </div>
-
+        </article>
+      </aside>
+    </section>
   </div>
 </template>
+
+<style scoped src="../styles/dashboard-executive.css"></style>

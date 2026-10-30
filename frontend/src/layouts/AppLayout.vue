@@ -1,131 +1,81 @@
 <script setup lang="ts">
 import {
+  Bell,
+  ChevronDown,
   LayoutDashboard,
   Package,
   Warehouse,
-  ArrowDownToLine,
-  ArrowUpFromLine,
-  Truck,
-  FileChartColumn,
-  LogOut,
-  Bell,
-  Search,
+  Building2,
 } from 'lucide-vue-next'
+
+const navItems = [
+  {
+    label: 'Dashboard',
+    to: '/',
+    icon: LayoutDashboard,
+  },
+  {
+    label: 'Products',
+    to: '/products',
+    icon: Package,
+  },
+  {
+    label: 'Inventory',
+    to: '/inventory',
+    icon: Warehouse,
+  },
+  {
+    label: 'Suppliers & Reports',
+    to: '/suppliers-reports',
+    icon: Building2,
+  },
+]
 </script>
 
 <template>
-  <div class="app-layout">
-
-    <!-- Sidebar -->
-    <aside class="sidebar">
-
-      <div class="sidebar-brand">
-        <div class="logo-container">
-          <img
-            src="/lvl-up-logo.png"
-            alt="LVL UP Enterprises OPC"
-            class="logo"
-          />
+  <div class="app-shell">
+    <header class="app-topnav">
+      <RouterLink to="/" class="brand-area">
+        <div class="brand-mark">
+          <img src="/lvl-up-logo.png" alt="LVL UP logo" />
         </div>
+      </RouterLink>
 
-        <div class="brand-text">
-          <strong>LVL UP</strong>
-          <span>Inventory System</span>
-        </div>
-      </div>
-
-      <nav class="sidebar-nav">
-
-        <RouterLink to="/" class="nav-item">
-          <LayoutDashboard :size="20" />
-          <span>Dashboard</span>
-        </RouterLink>
-
-        <RouterLink to="/products" class="nav-item">
-          <Package :size="20" />
-          <span>Products</span>
-        </RouterLink>
-        
-        <RouterLink to="/inventory" class="nav-item">
-          <Warehouse :size="20" />
-          <span>Inventory</span>
-        </RouterLink>
-
-        <RouterLink to="/stock-in" class="nav-item">
-          <ArrowDownToLine :size="20" />
-          <span>Stock In</span>
-        </RouterLink>
-
-        <RouterLink to="/stock-out" class="nav-item">
-          <ArrowUpFromLine :size="20" />
-          <span>Stock Out</span>
-        </RouterLink>
-
-        <RouterLink to="/suppliers" class="nav-item">
-          <Truck :size="20" />
-          <span>Suppliers</span>
-        </RouterLink>
-
+      <nav class="nav-pill-group" aria-label="Primary navigation">
         <RouterLink
-          to="/reports"
-          class="nav-item"
+          v-for="item in navItems"
+          :key="item.to"
+          :to="item.to"
+          class="topnav-link"
         >
-          <FileChartColumn :size="20" />
-          <span>Reports</span>
+          <component :is="item.icon" :size="16" />
+          <span>{{ item.label }}</span>
         </RouterLink>
-        <div class="nav-divider"></div>
-
       </nav>
 
-      <div class="sidebar-footer">
-        <button class="logout-button">
-          <LogOut :size="19" />
-          <span>Logout</span>
+      <div class="topnav-actions">
+        <button class="topnav-icon-button" type="button" aria-label="Notifications">
+          <Bell :size="18" />
+          <span class="notification-dot"></span>
         </button>
-      </div>
 
-    </aside>
+        <div class="owner-chip">
+          <div class="owner-avatar">A</div>
 
-    <!-- Main -->
-    <div class="main-area">
-
-      <header class="topbar">
-
-        <div class="search-wrapper">
-          <Search :size="19" />
-          <input
-            type="text"
-            placeholder="Search products..."
-          />
-        </div>
-
-        <div class="topbar-actions">
-
-          <button class="icon-button">
-            <Bell :size="21" />
-            <span class="notification-dot"></span>
-          </button>
-
-          <div class="user-profile">
-            <div class="avatar">
-              A
-            </div>
-
-            <div class="user-details">
-              <strong>Administrator</strong>
-              <span>Admin</span>
-            </div>
+          <div class="owner-copy">
+            <strong>Administrator</strong>
+            <span>Owner</span>
           </div>
 
+          <ChevronDown :size="15" class="owner-chevron" />
         </div>
+      </div>
+    </header>
 
-      </header>
-
-      <main class="content">
-        <slot />
-      </main>
-
-    </div>
-
+    <main class="app-main">
+      <RouterView />
+    </main>
   </div>
 </template>
+
+<style scoped src="../styles/app-layout-topnav.css"></style>

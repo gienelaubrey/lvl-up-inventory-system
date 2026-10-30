@@ -1,15 +1,23 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import DashboardView from '../views/DashboardView.vue'
-import ProductsView from '../views/ProductsView.vue'
-import InventoryView from '../views/InventoryView.vue'
-import StockInView from '../views/StockInView.vue'
-import StockOutView from '../views/StockOutView.vue'
-import MovementsView from '../views/MovementsView.vue'
-import SupplierView from '../views/SupplierView.vue'
-import ReportsView from '../views/ReportsView.vue'
+import {
+  createRouter,
+  createWebHistory,
+} from 'vue-router'
+
+import DashboardView
+  from '../views/DashboardView.vue'
+
+import ProductsView
+  from '../views/ProductsView.vue'
+
+import InventoryView
+  from '../views/InventoryView.vue'
+
+import SupplierHubView
+  from '../views/SupplierHubView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
+
   routes: [
     {
       path: '/',
@@ -30,33 +38,30 @@ const router = createRouter({
     },
 
     {
+      path: '/suppliers-reports',
+      name: 'suppliers-reports',
+      component: SupplierHubView,
+    },
+
+    /* Backward-compatible redirects */
+    {
       path: '/stock-in',
-      name: 'stock-in',
-      component: StockInView,
+      redirect: '/inventory',
     },
 
     {
       path: '/stock-out',
-      name: 'stock-out',
-      component: StockOutView,
-    },
-
-    {
-      path: '/movements',
-      name: 'movements',
-      component: MovementsView,
+      redirect: '/inventory',
     },
 
     {
       path: '/suppliers',
-      name: 'suppliers',
-      component: SupplierView,
+      redirect: '/suppliers-reports',
     },
 
     {
       path: '/reports',
-      name: 'reports',
-      component: ReportsView,
+      redirect: '/suppliers-reports?tab=reports',
     },
   ],
 })

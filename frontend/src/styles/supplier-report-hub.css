@@ -1,0 +1,52 @@
+.supplier-report-hub {
+  width: 100%;
+}
+
+.hub-switch {
+  width: fit-content;
+  margin-bottom: 18px;
+
+  display: inline-flex;
+  gap: 4px;
+
+  padding: 5px;
+
+  border: 1px solid #e8dfd8;
+  border-radius: 999px;
+
+  background: #f5f1ec;
+}
+
+.hub-switch button {
+  min-height: 39px;
+  padding: 0 15px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  border-radius: 999px;
+
+  background: transparent;
+  color: #665c57;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.hub-switch button.active {
+  background:
+    linear-gradient(
+      180deg,
+      #8a252b,
+      #68181e
+    );
+
+  color: #fff;
+
+  box-shadow:
+    0 7px 16px
+    rgba(104, 24, 30, 0.16);
+}

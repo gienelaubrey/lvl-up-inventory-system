@@ -1,0 +1,299 @@
+.app-shell {
+  min-height: 100vh;
+  padding: 22px;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(126, 26, 32, 0.08),
+      transparent 24%
+    ),
+    linear-gradient(
+      180deg,
+      #f6f2ed 0%,
+      #efe9e2 100%
+    );
+}
+
+.app-topnav {
+  position: sticky;
+  top: 16px;
+  z-index: 100;
+
+  min-height: 76px;
+  padding: 12px 18px;
+
+  display: grid;
+  grid-template-columns:
+    90px
+    1fr
+    auto;
+
+  align-items: center;
+  gap: 20px;
+
+  border: 1px solid #eadfd7;
+  border-radius: 24px;
+
+  background:
+    rgba(255, 253, 249, 0.92);
+
+  backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 14px 36px
+    rgba(66, 27, 23, 0.07);
+}
+
+.brand-area {
+  justify-self: start;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 88px;
+  height: 52px;
+
+  display: grid;
+  place-items: center;
+
+  overflow: hidden;
+
+  border: none;
+  border-radius: 10px;
+
+  background: transparent;
+}
+
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.brand-copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-copy strong {
+  color: #65181d;
+  font-size: 15px;
+  font-weight: 850;
+  letter-spacing: 0.055em;
+}
+
+.brand-copy span {
+  margin-top: 2px;
+  color: #877b75;
+  font-size: 10px;
+}
+
+.nav-pill-group {
+  justify-self: center;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  padding: 5px;
+
+  border: 1px solid #ece4de;
+  border-radius: 999px;
+
+  background: #f5f1ec;
+}
+
+.topnav-link {
+  min-height: 40px;
+  padding: 0 15px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  border-radius: 999px;
+
+  color: #655b56;
+
+  text-decoration: none;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  transition:
+    color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.topnav-link:hover {
+  color: #65181d;
+}
+
+.topnav-link.router-link-active {
+  background:
+    linear-gradient(
+      180deg,
+      #8a252b,
+      #68181e
+    );
+
+  color: #fff;
+
+  box-shadow:
+    0 7px 16px
+    rgba(104, 24, 30, 0.18);
+}
+
+.topnav-actions {
+  justify-self: end;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topnav-icon-button {
+  position: relative;
+
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid #ece4de;
+  border-radius: 50%;
+
+  background: #fff;
+  color: #554b47;
+
+  cursor: pointer;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  width: 7px;
+  height: 7px;
+
+  border: 2px solid #fff;
+  border-radius: 50%;
+
+  background: #b21d25;
+}
+
+.owner-chip {
+  min-height: 46px;
+  padding: 5px 10px 5px 5px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  border: 1px solid #ece4de;
+  border-radius: 999px;
+
+  background: #fff;
+}
+
+.owner-avatar {
+  width: 36px;
+  height: 36px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      145deg,
+      #9b2a31,
+      #65181d
+    );
+
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.owner-copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.owner-copy strong {
+  color: #29211f;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.owner-copy span {
+  margin-top: 2px;
+  color: #8b807a;
+  font-size: 9px;
+}
+
+.owner-chevron {
+  color: #8b807a;
+}
+
+.app-main {
+  width: min(1540px, 100%);
+  margin: 0 auto;
+  padding: 28px 0 12px;
+}
+
+@media (max-width: 1050px) {
+  .app-topnav {
+    grid-template-columns: 1fr auto;
+  }
+
+  .nav-pill-group {
+    grid-column: 1 / -1;
+    grid-row: 2;
+
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 720px) {
+  .app-shell {
+    padding: 12px;
+  }
+
+  .app-topnav {
+    top: 8px;
+    padding: 10px;
+    border-radius: 18px;
+  }
+
+  .brand-copy,
+  .owner-copy,
+  .owner-chevron {
+    display: none;
+  }
+
+  .nav-pill-group {
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+  .topnav-link span {
+    white-space: nowrap;
+  }
+
+  .app-main {
+    padding-top: 20px;
+  }
+}

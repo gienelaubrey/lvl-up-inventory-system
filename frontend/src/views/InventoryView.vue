@@ -2,29 +2,48 @@
 import {
   computed,
   onMounted,
+  reactive,
   ref,
 } from 'vue'
 
 import {
+  ArrowDownToLine,
+  ArrowUpFromLine,
   Boxes,
   Search,
-  TriangleAlert,
 } from 'lucide-vue-next'
 
 import {
   getCategories,
   getProducts,
+  getStockMovements,
+  stockIn,
+  stockOut,
   type Category,
   type Product,
+  type StockMovement,
 } from '../services/api'
 
+type MovementMode = 'IN' | 'OUT'
 
 const products = ref<Product[]>([])
 const categories = ref<Category[]>([])
+const movements = ref<StockMovement[]>([])
 
 const loading = ref(true)
+const submitting = ref(false)
 const searchQuery = ref('')
+const message = ref('')
+const errorMessage = ref('')
+const mode = ref<MovementMode>('IN')
 
+const form = reactive({
+  product_id: '',
+  quantity: 1,
+  reason: 'RECEIPT',
+  reference: '',
+  notes: '',
+})
 
 const filteredProducts = computed(() => {
   const query =
@@ -34,12 +53,39 @@ const filteredProducts = computed(() => {
     return products.value
   }
 
-  return products.value.filter((product) =>
-    product.name.toLowerCase().includes(query) ||
-    product.sku.toLowerCase().includes(query)
+  return products.value.filter(
+    (product) =>
+      product.sku.toLowerCase().includes(query) ||
+      product.name.toLowerCase().includes(query)
   )
 })
 
+const selectedProduct = computed(() =>
+  products.value.find(
+    (product) =>
+      product.id === Number(form.product_id)
+  )
+)
+
+const totalStock = computed(() =>
+  products.value.reduce(
+    (total, product) =>
+      total + product.current_stock,
+    0
+  )
+)
+
+const lowStockCount = computed(() =>
+  products.value.filter(
+    (product) =>
+      product.current_stock <=
+      product.reorder_level
+  ).length
+)
+
+const recentMovements = computed(
+  () => movements.value.slice(0, 8)
+)
 
 function categoryName(
   categoryId: number | null
@@ -56,126 +102,377 @@ function categoryName(
   )
 }
 
-
 function stockStatus(product: Product) {
   if (product.current_stock === 0) {
-    return 'out'
+    return 'Out'
   }
 
   if (
     product.current_stock <=
     product.reorder_level
   ) {
-    return 'low'
+    return 'Low'
   }
 
-  return 'healthy'
+  return 'Healthy'
 }
 
+function setMode(value: MovementMode) {
+  mode.value = value
+  message.value = ''
+  errorMessage.value = ''
 
-async function loadInventory() {
+  form.reason =
+    value === 'IN'
+      ? 'RECEIPT'
+      : 'SALE'
+}
+
+async function loadData() {
   loading.value = true
 
   try {
     const [
       productData,
       categoryData,
+      movementData,
     ] = await Promise.all([
       getProducts(),
       getCategories(),
+      getStockMovements(),
     ])
 
     products.value = productData
     categories.value = categoryData
+    movements.value = movementData
+  } catch (error) {
+    errorMessage.value =
+      error instanceof Error
+        ? error.message
+        : 'Unable to load inventory.'
   } finally {
     loading.value = false
   }
 }
 
+async function submitMovement() {
+  message.value = ''
+  errorMessage.value = ''
 
-onMounted(loadInventory)
+  if (!form.product_id) {
+    errorMessage.value = 'Select a product.'
+    return
+  }
+
+  if (Number(form.quantity) <= 0) {
+    errorMessage.value =
+      'Quantity must be greater than zero.'
+    return
+  }
+
+  submitting.value = true
+
+  const payload = {
+    product_id: Number(form.product_id),
+    quantity: Number(form.quantity),
+    reason: form.reason,
+    reference:
+      form.reference.trim() || null,
+    notes:
+      form.notes.trim() || null,
+  }
+
+  try {
+    const result =
+      mode.value === 'IN'
+        ? await stockIn(payload)
+        : await stockOut(payload)
+
+    message.value =
+      mode.value === 'IN'
+        ? `Stock received. New balance: ${result.stock_after}.`
+        : `Stock released. Remaining balance: ${result.stock_after}.`
+
+    form.quantity = 1
+    form.reference = ''
+    form.notes = ''
+
+    await loadData()
+  } catch (error) {
+    errorMessage.value =
+      error instanceof Error
+        ? error.message
+        : 'Unable to save movement.'
+  } finally {
+    submitting.value = false
+  }
+}
+
+onMounted(loadData)
 </script>
 
 <template>
-  <div class="inventory-page">
-
-    <div class="page-header">
+  <div class="inventory-hub">
+    <section class="inventory-heading">
       <div>
+        <span class="eyebrow">Warehouse operations</span>
         <h1>Inventory</h1>
-
         <p>
-          Monitor current stock levels across
-          all LVL UP products.
+          Monitor stock balances and record Stock In or
+          Stock Out from one workspace.
         </p>
       </div>
-    </div>
+    </section>
 
-    <div class="inventory-summary">
+    <section class="inventory-stat-grid">
+      <article>
+        <span>Total Products</span>
+        <strong>{{ products.length }}</strong>
+      </article>
 
-      <div class="inventory-summary-card">
-        <Boxes :size="22" />
+      <article>
+        <span>Total Units</span>
+        <strong>{{ totalStock.toLocaleString() }}</strong>
+      </article>
 
-        <div>
-          <span>Total Units</span>
+      <article>
+        <span>Low / Out of Stock</span>
+        <strong>{{ lowStockCount }}</strong>
+      </article>
+    </section>
 
-          <strong>
-            {{
-              products.reduce(
-                (total, product) =>
-                  total + product.current_stock,
-                0
-              )
-            }}
-          </strong>
+    <section class="inventory-work-grid">
+      <article class="inventory-card transaction-card">
+        <div class="inventory-card-head">
+          <div>
+            <span class="card-kicker">Stock transaction</span>
+            <h2>Record Movement</h2>
+          </div>
         </div>
-      </div>
 
-      <div class="inventory-summary-card">
-        <TriangleAlert :size="22" />
+        <div class="movement-toggle">
+          <button
+            type="button"
+            :class="{ active: mode === 'IN' }"
+            @click="setMode('IN')"
+          >
+            <ArrowDownToLine :size="16" />
+            Stock In
+          </button>
 
-        <div>
-          <span>Low / Out of Stock</span>
-
-          <strong>
-            {{
-              products.filter(
-                (product) =>
-                  product.current_stock <=
-                  product.reorder_level
-              ).length
-            }}
-          </strong>
+          <button
+            type="button"
+            :class="{ active: mode === 'OUT' }"
+            @click="setMode('OUT')"
+          >
+            <ArrowUpFromLine :size="16" />
+            Stock Out
+          </button>
         </div>
-      </div>
 
-    </div>
+        <form
+          class="movement-form"
+          @submit.prevent="submitMovement"
+        >
+          <label>
+            Product
+            <select
+              v-model="form.product_id"
+              required
+            >
+              <option value="">
+                Select product
+              </option>
 
+              <option
+                v-for="product in products"
+                :key="product.id"
+                :value="product.id"
+              >
+                {{ product.sku }} — {{ product.name }}
+              </option>
+            </select>
+          </label>
 
-    <section class="panel">
+          <div
+            v-if="selectedProduct"
+            class="selected-product-summary"
+          >
+            <div>
+              <span>Current Stock</span>
+              <strong>
+                {{ selectedProduct.current_stock }}
+              </strong>
+            </div>
 
-      <div class="products-toolbar">
+            <div>
+              <span>Reorder Level</span>
+              <strong>
+                {{ selectedProduct.reorder_level }}
+              </strong>
+            </div>
+          </div>
 
-        <div class="products-search">
-          <Search :size="17" />
+          <div class="movement-form-grid">
+            <label>
+              Quantity
+              <input
+                v-model.number="form.quantity"
+                type="number"
+                min="1"
+                required
+              />
+            </label>
 
+            <label>
+              Reason
+              <select v-model="form.reason">
+                <template v-if="mode === 'IN'">
+                  <option value="RECEIPT">Receipt</option>
+                  <option value="RETURN">Return</option>
+                  <option value="ADJUSTMENT">Adjustment</option>
+                </template>
+
+                <template v-else>
+                  <option value="SALE">Sale</option>
+                  <option value="DAMAGE">Damage</option>
+                  <option value="RETURN">Return</option>
+                  <option value="ADJUSTMENT">Adjustment</option>
+                </template>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            Reference
+            <input
+              v-model="form.reference"
+              type="text"
+              placeholder="PO / DR / SALE reference"
+            />
+          </label>
+
+          <label>
+            Notes
+            <textarea
+              v-model="form.notes"
+              rows="3"
+              placeholder="Optional notes"
+            ></textarea>
+          </label>
+
+          <div
+            v-if="message"
+            class="movement-message success"
+          >
+            {{ message }}
+          </div>
+
+          <div
+            v-if="errorMessage"
+            class="movement-message error"
+          >
+            {{ errorMessage }}
+          </div>
+
+          <button
+            type="submit"
+            class="movement-submit"
+            :disabled="submitting"
+          >
+            <component
+              :is="
+                mode === 'IN'
+                  ? ArrowDownToLine
+                  : ArrowUpFromLine
+              "
+              :size="17"
+            />
+
+            {{
+              submitting
+                ? 'Saving...'
+                : mode === 'IN'
+                  ? 'Receive Stock'
+                  : 'Release Stock'
+            }}
+          </button>
+        </form>
+      </article>
+
+      <article class="inventory-card recent-movements-card">
+        <div class="inventory-card-head">
+          <div>
+            <span class="card-kicker">Activity</span>
+            <h2>Recent Movements</h2>
+          </div>
+        </div>
+
+        <div class="movement-list">
+          <div
+            v-for="movement in recentMovements"
+            :key="movement.id"
+            class="movement-row"
+          >
+            <div
+              class="movement-row-icon"
+              :class="
+                movement.movement_type === 'IN'
+                  ? 'movement-row-in'
+                  : 'movement-row-out'
+              "
+            >
+              <ArrowDownToLine
+                v-if="movement.movement_type === 'IN'"
+                :size="15"
+              />
+              <ArrowUpFromLine
+                v-else
+                :size="15"
+              />
+            </div>
+
+            <div>
+              <strong>
+                {{
+                  products.find(
+                    (product) =>
+                      product.id === movement.product_id
+                  )?.sku || `#${movement.product_id}`
+                }}
+              </strong>
+
+              <span>
+                {{ movement.movement_type }}
+                · {{ movement.quantity }} units
+              </span>
+            </div>
+
+            <b>{{ movement.stock_after }}</b>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="inventory-card inventory-table-card">
+      <div class="inventory-table-toolbar">
+        <div>
+          <span class="card-kicker">Current balance</span>
+          <h2>Stock Overview</h2>
+        </div>
+
+        <div class="inventory-search">
+          <Search :size="16" />
           <input
             v-model="searchQuery"
-            placeholder="Search inventory..."
+            type="text"
+            placeholder="Search SKU or product..."
           />
         </div>
-
-        <div class="product-count">
-          {{ filteredProducts.length }}
-          products
-        </div>
-
       </div>
 
-
-      <div class="table-wrapper">
-
-        <table class="products-table">
-
+      <div class="inventory-table-wrap">
+        <table>
           <thead>
             <tr>
               <th>SKU</th>
@@ -183,90 +480,54 @@ onMounted(loadInventory)
               <th>Category</th>
               <th>Unit</th>
               <th>Current Stock</th>
-              <th>Reorder Level</th>
+              <th>Reorder</th>
               <th>Status</th>
             </tr>
           </thead>
 
           <tbody>
-
-            <tr v-if="loading">
-              <td
-                colspan="7"
-                class="table-message"
-              >
-                Loading inventory...
-              </td>
-            </tr>
-
             <tr
               v-for="product in filteredProducts"
-              v-else
               :key="product.id"
             >
-
               <td>
-                <span class="sku">
+                <span class="sku-chip">
                   {{ product.sku }}
                 </span>
               </td>
 
               <td>
-                <strong class="product-name">
-                  {{ product.name }}
-                </strong>
+                <strong>{{ product.name }}</strong>
               </td>
 
               <td>
-                {{
-                  categoryName(
-                    product.category_id
-                  )
-                }}
+                {{ categoryName(product.category_id) }}
               </td>
 
-              <td>
-                {{ product.unit }}
-              </td>
+              <td>{{ product.unit }}</td>
 
               <td>
-                <strong>
-                  {{ product.current_stock }}
-                </strong>
+                <strong>{{ product.current_stock }}</strong>
               </td>
 
-              <td>
-                {{ product.reorder_level }}
-              </td>
+              <td>{{ product.reorder_level }}</td>
 
               <td>
                 <span
-                  class="stock-badge"
+                  class="status-chip"
                   :class="
-                    `stock-${stockStatus(product)}`
+                    `status-${stockStatus(product).toLowerCase()}`
                   "
                 >
-                  {{
-                    stockStatus(product) ===
-                    'healthy'
-                      ? 'In Stock'
-                      : stockStatus(product) ===
-                        'low'
-                        ? 'Low Stock'
-                        : 'Out of Stock'
-                  }}
+                  {{ stockStatus(product) }}
                 </span>
               </td>
-
             </tr>
-
           </tbody>
-
         </table>
-
       </div>
-
     </section>
-
   </div>
 </template>
+
+<style scoped src="../styles/inventory-combined.css"></style>
