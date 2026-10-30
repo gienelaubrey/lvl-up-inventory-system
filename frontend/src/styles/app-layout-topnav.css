@@ -75,24 +75,6 @@
   object-fit: contain;
 }
 
-.brand-copy {
-  display: flex;
-  flex-direction: column;
-}
-
-.brand-copy strong {
-  color: #65181d;
-  font-size: 15px;
-  font-weight: 850;
-  letter-spacing: 0.055em;
-}
-
-.brand-copy span {
-  margin-top: 2px;
-  color: #877b75;
-  font-size: 10px;
-}
-
 .nav-pill-group {
   justify-self: center;
 
@@ -202,10 +184,6 @@
   font-size: 9px;
 }
 
-.owner-chevron {
-  color: #8b807a;
-}
-
 .app-main {
   width: min(1540px, 100%);
   margin: 0 auto;
@@ -235,12 +213,6 @@
     top: 8px;
     padding: 10px;
     border-radius: 18px;
-  }
-
-  .brand-copy,
-  .owner-copy,
-  .owner-chevron {
-    display: none;
   }
 
   .nav-pill-group {

@@ -9,7 +9,6 @@ import {
 import {
   ArrowDownToLine,
   ArrowUpFromLine,
-  Boxes,
   Search,
 } from 'lucide-vue-next'
 
