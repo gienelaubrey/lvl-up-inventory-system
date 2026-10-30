@@ -494,19 +494,99 @@
   }
 }
 
+
 @media (max-width: 760px) {
   .dashboard-intro {
+    margin-bottom: 18px;
+
     align-items: stretch;
     flex-direction: column;
+
+    gap: 14px;
+  }
+
+  .dashboard-intro h1 {
+    font-size: 28px;
+  }
+
+  .dashboard-intro p {
+    max-width: 100%;
+
+    font-size: 11px;
   }
 
   .export-report-button {
-    align-self: flex-start;
+    width: 100%;
+
+    justify-content: center;
   }
 
-  .metric-grid,
-  .dashboard-two-column,
+
+  .metric-grid {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+  }
+
+  .metric-card {
+    min-height: auto;
+
+    padding: 16px;
+  }
+
+  .metric-card > strong {
+    margin-top: 14px;
+
+    font-size: 30px;
+  }
+
+
+  .dashboard-content-grid {
+    gap: 14px;
+  }
+
+  .dashboard-primary-column,
+  .dashboard-secondary-column {
+    gap: 14px;
+  }
+
+  .dashboard-two-column {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+  }
+
   .movement-summary-grid {
     grid-template-columns: 1fr;
+  }
+
+  .executive-card {
+    border-radius: 16px;
+  }
+
+  .executive-card-head {
+    padding: 15px;
+  }
+
+  .recent-list,
+  .low-stock-list,
+  .ranking-list {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+
+@media (max-width: 430px) {
+  .dashboard-intro h1 {
+    font-size: 25px;
+  }
+
+  .metric-card {
+    padding: 15px;
+  }
+
+  .metric-card > strong {
+    font-size: 28px;
   }
 }

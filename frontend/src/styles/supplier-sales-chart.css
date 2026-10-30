@@ -111,13 +111,21 @@
 }
 
 @media (max-width: 700px) {
+  .analytics-card {
+    border-radius: 16px;
+  }
+
   .analytics-header {
+    padding: 15px;
+
     align-items: stretch;
     flex-direction: column;
   }
 
   .analytics-controls {
-    flex-direction: column;
+    display: grid;
+
+    grid-template-columns: 1fr;
   }
 
   .analytics-controls select {
@@ -125,6 +133,11 @@
   }
 
   .analytics-canvas {
-    height: 390px;
+    height: 340px;
+
+    padding:
+      14px
+      8px
+      16px;
   }
 }

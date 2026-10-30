@@ -91,13 +91,25 @@
 }
 
 @media (max-width: 700px) {
+  .trend-card {
+    border-radius: 16px;
+  }
+
   .trend-header {
+    padding: 15px;
+
     align-items: flex-start;
     flex-direction: column;
+
+    gap: 9px;
   }
 
   .trend-canvas {
-    height: 360px;
-    padding: 16px 12px;
+    height: 300px;
+
+    padding:
+      14px
+      8px
+      16px;
   }
 }

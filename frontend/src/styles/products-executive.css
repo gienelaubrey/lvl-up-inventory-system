@@ -255,15 +255,82 @@
 }
 
 @media (max-width: 720px) {
-  .products-page .page-header,
-  .products-page .products-toolbar {
-    align-items: stretch;
-    flex-direction: column;
+  .products-page {
+    width: 100%;
+
+    overflow-x: hidden;
   }
 
-  .products-page .products-search,
+
+  .products-page .page-header {
+    margin-bottom: 16px;
+
+    align-items: stretch;
+    flex-direction: column;
+
+    gap: 14px;
+  }
+
+  .products-page .page-header h1 {
+    font-size: 28px;
+  }
+
+  .products-page .page-header p {
+    font-size: 11px;
+  }
+
+
   .products-page .primary-button {
     width: 100%;
+
+    min-height: 42px;
+  }
+
+
+  .products-page .panel {
+    width: 100%;
+    max-width: 100%;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+  }
+
+
+  .products-page .products-toolbar {
+    padding: 12px;
+
+    align-items: stretch;
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .products-page .products-search {
+    width: 100%;
+  }
+
+  .products-page .product-count {
+    align-self: flex-start;
+  }
+
+
+  .products-page .table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling:
+      touch;
+  }
+
+  .products-page .products-table {
+    min-width: 880px;
+  }
+
+
+  .products-page .form-grid {
+    grid-template-columns: 1fr;
   }
 }
 .eyebrow,

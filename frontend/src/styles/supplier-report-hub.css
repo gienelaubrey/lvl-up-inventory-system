@@ -50,3 +50,27 @@
     0 7px 16px
     rgba(104, 24, 30, 0.16);
 }
+
+@media (max-width: 600px) {
+  .hub-switch {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+      1fr
+      1fr;
+
+    border-radius: 14px;
+  }
+
+  .hub-switch button {
+    width: 100%;
+
+    padding: 0 10px;
+
+    justify-content: center;
+
+    font-size: 9px;
+  }
+}
