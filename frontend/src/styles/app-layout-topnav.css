@@ -149,47 +149,6 @@
     0 7px 16px
     rgba(104, 24, 30, 0.18);
 }
-
-.topnav-actions {
-  justify-self: end;
-
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.topnav-icon-button {
-  position: relative;
-
-  width: 42px;
-  height: 42px;
-
-  display: grid;
-  place-items: center;
-
-  border: 1px solid #ece4de;
-  border-radius: 50%;
-
-  background: #fff;
-  color: #554b47;
-
-  cursor: pointer;
-}
-
-.notification-dot {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-
-  width: 7px;
-  height: 7px;
-
-  border: 2px solid #fff;
-  border-radius: 50%;
-
-  background: #b21d25;
-}
-
 .owner-chip {
   min-height: 46px;
   padding: 5px 10px 5px 5px;
@@ -296,4 +255,19 @@
   .app-main {
     padding-top: 20px;
   }
+}
+
+:global(html) {
+  scrollbar-width: none;
+}
+
+:global(body) {
+  scrollbar-width: none;
+}
+
+:global(html::-webkit-scrollbar),
+:global(body::-webkit-scrollbar) {
+  display: none;
+  width: 0;
+  height: 0;
 }

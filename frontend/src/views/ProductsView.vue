@@ -264,6 +264,7 @@ onMounted(loadData)
     <div class="page-header">
 
       <div>
+      <span class="eyebrow">PRODUCT DIRECTORY</span>
         <h1>Products</h1>
 
         <p>
@@ -730,3 +731,7 @@ onMounted(loadData)
 
   </div>
 </template>
+<style
+  scoped
+  src="../styles/products-executive.css"
+></style>

@@ -309,6 +309,7 @@ onMounted(loadSuppliers)
     <div class="page-header">
 
       <div>
+      <span class="eyebrow">PRODUCT DIRECTORY</span>
         <h1>Suppliers</h1>
 
         <p>
@@ -775,3 +776,8 @@ onMounted(loadSuppliers)
 
   </div>
 </template>
+
+<style
+  scoped
+  src="../styles/suppliers-executive.css"
+></style>

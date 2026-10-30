@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import {
-  Bell,
-  ChevronDown,
   LayoutDashboard,
   Package,
   Warehouse,
@@ -54,10 +52,6 @@ const navItems = [
       </nav>
 
       <div class="topnav-actions">
-        <button class="topnav-icon-button" type="button" aria-label="Notifications">
-          <Bell :size="18" />
-          <span class="notification-dot"></span>
-        </button>
 
         <div class="owner-chip">
           <div class="owner-avatar">A</div>
@@ -66,8 +60,6 @@ const navItems = [
             <strong>Administrator</strong>
             <span>Owner</span>
           </div>
-
-          <ChevronDown :size="15" class="owner-chevron" />
         </div>
       </div>
     </header>

@@ -1,0 +1,277 @@
+.products-page {
+  width: 100%;
+}
+
+/* Header */
+
+.products-page .page-header {
+  margin-bottom: 20px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.products-page .page-header > div:first-child {
+  padding-left: 0;
+}
+
+.products-page .page-header > div:first-child::before {
+  display: none;
+}
+
+.products-page .page-header h1 {
+  margin: 0;
+
+  color: #211b19;
+
+  font-family: inherit;
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.05;
+
+  font-weight: 820;
+  letter-spacing: -0.035em;
+}
+
+.products-page .page-header p {
+  margin: 7px 0 0;
+
+  color: #756b66;
+
+  font-size: 12px;
+}
+
+/* Add Product */
+
+.products-page .primary-button {
+  min-height: 44px;
+  padding: 0 17px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #8a252b,
+      #68181e
+    );
+
+  color: white;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  box-shadow:
+    0 9px 20px
+    rgba(104, 24, 30, 0.16);
+}
+
+/* Main card */
+
+.products-page .panel {
+  overflow: hidden;
+
+  border: 1px solid #e9dfd7;
+  border-radius: 20px;
+
+  background: #fffdfa;
+
+  box-shadow:
+    0 12px 28px
+    rgba(64, 31, 25, 0.05);
+}
+
+/* Toolbar */
+
+.products-page .products-toolbar {
+  min-height: 72px;
+  padding: 14px 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  border-bottom: 1px solid #eee6df;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,0.76),
+      rgba(250,247,242,0.5)
+    );
+}
+
+.products-page .products-search {
+  width: min(410px, 100%);
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 0 12px;
+
+  border: 1px solid #e7ded7;
+  border-radius: 11px;
+
+  background: #faf7f3;
+  color: #988d87;
+}
+
+.products-page .products-search:focus-within {
+  border-color: rgba(123, 32, 38, 0.28);
+
+  background: white;
+
+  box-shadow:
+    0 0 0 4px
+    rgba(123, 32, 38, 0.055);
+}
+
+.products-page .products-search input {
+  width: 100%;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #2a2220;
+
+  font-size: 10px;
+}
+
+.products-page .product-count {
+  padding: 6px 10px;
+
+  border: 1px solid #e7ded7;
+  border-radius: 999px;
+
+  background: #faf7f3;
+
+  color: #7d716b;
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+/* Table */
+
+.products-page .products-table {
+  width: 100%;
+  min-width: 980px;
+
+  border-collapse: collapse;
+}
+
+.products-page .products-table th {
+  padding: 12px 18px;
+
+  border-bottom: 1px solid #e8dfd8;
+
+  background: #f8f4ef;
+
+  color: #756b66;
+
+  text-align: left;
+  text-transform: uppercase;
+
+  font-size: 8px;
+  font-weight: 850;
+
+  letter-spacing: 0.085em;
+}
+
+.products-page .products-table td {
+  padding: 15px 18px;
+
+  border-bottom: 1px solid #eee7e1;
+
+  color: #5f5550;
+
+  font-size: 10px;
+}
+
+.products-page .products-table tbody tr:hover td {
+  background: #fcf8f4;
+}
+
+.products-page .products-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.products-page .sku {
+  display: inline-flex;
+
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  background: #fbefef;
+  color: #8a252b;
+
+  font-size: 8px;
+  font-weight: 850;
+}
+
+.products-page .product-name {
+  color: #29211f;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.products-page .stock-badge {
+  display: inline-flex;
+
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  font-size: 8px;
+  font-weight: 850;
+}
+
+.products-page .stock-healthy {
+  background: #edf5ef;
+  color: #3d6d53;
+}
+
+.products-page .stock-low {
+  background: #fbf3e5;
+  color: #9a6a2b;
+}
+
+.products-page .stock-out {
+  background: #faecec;
+  color: #8a272c;
+}
+
+@media (max-width: 720px) {
+  .products-page .page-header,
+  .products-page .products-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .products-page .products-search,
+  .products-page .primary-button {
+    width: 100%;
+  }
+}
+.eyebrow,
+.card-kicker {
+  color: #9a2a31;
+
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
